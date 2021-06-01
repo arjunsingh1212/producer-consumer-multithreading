@@ -1,23 +1,36 @@
 package com.assignment4.mysqlDB;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import com.assignment1.item.ItemEntity;
+import java.sql.*;
 
+@SuppressWarnings({"PMD.CommentRequired","PMD.SystemPrintln"})
 public class DatabaseOperations {
-  public static void main(String[] args) {
+
+  private final Statement statement;
+
+  public DatabaseOperations() throws SQLException {
+    final Connection connection = DriverManager.getConnection(
+            "jdbc:mysql://localhost:3306/salesdb", "root", "");
+    statement = connection.createStatement();
+  }
+
+  public void write(final ItemEntity item) {
     try {
-      Connection connection = DriverManager.getConnection(
-              "jdbc:mysql://localhost:3306/salesDB", "root", "");
-      Statement statement = connection.createStatement();
-      ResultSet resultSet = statement.executeQuery("select * from sales");
-      while (resultSet.next()) {
-        System.out.println(resultSet.getString("name"));
-        System.out.println(resultSet.getString("price"));
-      }
+      final String sql = "INSERT INTO sales(name, price, quantity, type) VALUES(" + item.getName()
+              + ", " + item.getPrice() + ", " + item.getQuantity() + ", " + item.getType() + ")";
+      statement.executeUpdate(sql);
+    } catch (SQLException except) {
+      System.out.println(except.getMessage());
+    }
+  }
+
+  public ResultSet read() {
+    ResultSet resultSet = null;
+    try {
+      resultSet = statement.executeQuery("select * from sales");
     } catch (Exception e) {
       System.out.println(e.getMessage());
     }
+    return resultSet;
   }
 }

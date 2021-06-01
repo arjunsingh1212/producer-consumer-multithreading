@@ -1,5 +1,8 @@
-package com.assignment2.exceptions;
+package com.assignment1.exceptions;
 
+/**
+ * Class for custom exception.
+ */
 public class GenericApplicationException extends Exception {
   public static final long serialVersionUID = 43287433;
 
